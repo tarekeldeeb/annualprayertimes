@@ -58,9 +58,11 @@ plt.grid(True, 'major', 'y', ls='-', lw=.5, c='k', alpha=.3)
 regions = []
 regions.append(mock(vert= [(1, 0)] + list(zip(t, fajr)) + [(365, 0)] ,color='0.3')) #darklow
 regions.append(mock(vert= [(1, 24)] + list(zip(t, isha)) + [(365, 24)] ,color= '0.3')) #darkhi
-fajr_r = fajr[::-1]
-t_r = t[::-1]
-regions.append(mock(vert=  list(zip(t, sunrise)) + list(zip(t_r, fajr_r)) ,color= '#efe000')) #sunrise
+regions.append(mock(vert=  list(zip(t, sunrise)) + list(zip(t[::-1], fajr[::-1])) ,color= '#efe000')) #sunrise
+regions.append(mock(vert=  list(zip(t, dhuhr)) + list(zip(t[::-1], sunrise[::-1])) ,color= '#94ff00')) #dhuhr
+regions.append(mock(vert=  list(zip(t, asr)) + list(zip(t[::-1], dhuhr[::-1])) ,color= '#55ff55')) #asr
+regions.append(mock(vert=  list(zip(t, maghrib)) + list(zip(t[::-1], asr[::-1])) ,color= '#ff7b00')) #maghrib
+regions.append(mock(vert=  list(zip(t, isha)) + list(zip(t[::-1], maghrib[::-1])) ,color= 'y')) #isha
 
 for r in regions:
     poly = Polygon(r.vert, facecolor=r.color, edgecolor=r.color)
