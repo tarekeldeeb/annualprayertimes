@@ -125,7 +125,7 @@ class PrayTimes():
 	timeSuffixes = ['am', 'pm']
 	invalidTime =  '-----'
 
-	numIterations = 1
+	numIterations = 3
 	offset = {}
 
 
