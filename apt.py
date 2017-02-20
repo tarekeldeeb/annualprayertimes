@@ -8,8 +8,9 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import datetime as DT
 from datetime import timedelta, date
-
 from pt import *
+
+def mock(**kwargs): return type('',(),kwargs)()
 
 PT = PrayTimes('Egypt')
 
@@ -41,7 +42,7 @@ asr = [time2minutes(x['asr']) for x in times]
 maghrib = [time2minutes(x['maghrib']) for x in times]
 isha = [time2minutes(x['isha']) for x in times]
 
-print "T=", len(t), "fajr=", len(fajr)
+#print "T=", len(t), "fajr=", len(fajr)
 
 fig, ax = plt.subplots()
 plt.plot(t,fajr, '#0d2bbb',t,sunrise, '#efe000',t,dhuhr, 'r',t,asr, '#94ff00',t,maghrib, '#ff7b00',t,isha, 'k')
@@ -53,13 +54,16 @@ ax.yaxis.set_major_formatter(plt.FuncFormatter('{:}:00'.format))
 plt.grid(True, 'major', 'y', ls='-', lw=.5, c='k', alpha=.3)
 
 
-# Make the shaded region
-darklow = [(1, 0)] + list(zip(t, fajr)) + [(365, 0)]
-darkhi = [(1, 24)] + list(zip(t, isha)) + [(365, 24)]
-poly = Polygon(darklow, facecolor='0.9', edgecolor='0.9')
-ax.add_patch(poly)
-poly = Polygon(darkhi, facecolor='0.9', edgecolor='0.9')
-ax.add_patch(poly)
+# Make the shaded regions
+regions = []
+regions.append(mock(vert= [(1, 0)] + list(zip(t, fajr)) + [(365, 0)] ,color='0.3')) #darklow
+regions.append(mock(vert= [(1, 24)] + list(zip(t, isha)) + [(365, 24)] ,color= '0.3')) #darkhi
+fajr_r = fajr[::-1]
+t_r = t[::-1]
+regions.append(mock(vert=  list(zip(t, sunrise)) + list(zip(t_r, fajr_r)) ,color= '#efe000')) #sunrise
 
+for r in regions:
+    poly = Polygon(r.vert, facecolor=r.color, edgecolor=r.color)
+    ax.add_patch(poly)
 
 plt.show()
