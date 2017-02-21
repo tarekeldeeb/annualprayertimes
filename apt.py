@@ -9,6 +9,8 @@ from matplotlib.patches import Polygon
 import datetime as DT
 from datetime import timedelta, date
 from pt import *
+from matplotlib.dates import FRIDAY
+from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
 
 def mock(**kwargs): return type('',(),kwargs)()
 
@@ -45,7 +47,27 @@ isha = [time2minutes(x['isha']) for x in times]
 #print "T=", len(t), "fajr=", len(fajr)
 
 fig, ax = plt.subplots()
-plt.plot(t,fajr, '#0d2bbb',t,sunrise, '#efe000',t,dhuhr, 'r',t,asr, '#94ff00',t,maghrib, '#ff7b00',t,isha, 'k')
+
+
+# every monday
+fridays = WeekdayLocator(FRIDAY)
+# every 2 month
+months = MonthLocator(range(1, 13), bymonthday=1, interval=2)
+monthsFmt = DateFormatter("%b '%y")
+
+#ax.plot_date(dates, opens, '-')
+ax.xaxis.set_major_locator(months)
+ax.xaxis.set_major_formatter(monthsFmt)
+ax.xaxis.set_minor_locator(fridays)
+ax.autoscale_view()
+ax.xaxis.grid(False, 'major')
+ax.xaxis.grid(True, 'minor')
+#ax.grid(True)
+
+fig.autofmt_xdate()
+
+
+plt.plot(t,fajr, 'k',t,sunrise, 'k',t,dhuhr, 'k',t,asr, 'k',t,maghrib, 'k',t,isha, 'k')
 #ax.plot_date(t,fajr, 'k')
 plt.axis([1, 365, 0, 24])
 
@@ -55,17 +77,20 @@ plt.grid(True, 'major', 'y', ls='-', lw=.5, c='k', alpha=.3)
 
 
 # Make the shaded regions
+# Color set from: https://www.design-seeds.com/seasons/summer/color-set14
 regions = []
-regions.append(mock(vert= [(1, 0)] + list(zip(t, fajr)) + [(365, 0)] ,color='0.3')) #darklow
-regions.append(mock(vert= [(1, 24)] + list(zip(t, isha)) + [(365, 24)] ,color= '0.3')) #darkhi
-regions.append(mock(vert=  list(zip(t, sunrise)) + list(zip(t[::-1], fajr[::-1])) ,color= '#efe000')) #sunrise
-regions.append(mock(vert=  list(zip(t, dhuhr)) + list(zip(t[::-1], sunrise[::-1])) ,color= '#94ff00')) #dhuhr
-regions.append(mock(vert=  list(zip(t, asr)) + list(zip(t[::-1], dhuhr[::-1])) ,color= '#55ff55')) #asr
-regions.append(mock(vert=  list(zip(t, maghrib)) + list(zip(t[::-1], asr[::-1])) ,color= '#ff7b00')) #maghrib
-regions.append(mock(vert=  list(zip(t, isha)) + list(zip(t[::-1], maghrib[::-1])) ,color= 'y')) #isha
+regions.append(mock(vert= [(1, 0)] + list(zip(t, fajr)) + [(365, 0)] ,color='#1C818C')) #darklow
+regions.append(mock(vert= [(1, 24)] + list(zip(t, isha)) + [(365, 24)] ,color= '#1C818C')) #darkhi
+regions.append(mock(vert=  list(zip(t, sunrise)) + list(zip(t[::-1], fajr[::-1])) ,color= '#7BBED1')) #sunrise
+regions.append(mock(vert=  list(zip(t, dhuhr)) + list(zip(t[::-1], sunrise[::-1])) ,color= '#B9D8DE')) #dhuhr
+regions.append(mock(vert=  list(zip(t, asr)) + list(zip(t[::-1], dhuhr[::-1])) ,color= '#FAE49E')) #asr
+regions.append(mock(vert=  list(zip(t, maghrib)) + list(zip(t[::-1], asr[::-1])) ,color= '#F0A471')) #maghrib
+regions.append(mock(vert=  list(zip(t, isha)) + list(zip(t[::-1], maghrib[::-1])) ,color= '#C26642')) #isha
 
 for r in regions:
     poly = Polygon(r.vert, facecolor=r.color, edgecolor=r.color)
     ax.add_patch(poly)
+
+
 
 plt.show()
