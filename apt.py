@@ -77,7 +77,7 @@ labels = plt.xticks()[1]
 plt.setp(labels, rotation=90)
 plt.axis([t[0], t[364], 0, 24])
 plt.yticks(range(0, 24), fontsize=12)
-ax.yaxis.set_major_formatter(plt.FuncFormatter('{:}:00'.format))
+ax.yaxis.set_major_formatter(plt.FuncFormatter('{:.2f}'.format))
 plt.grid(True, 'major', 'y', ls='-', lw=.5, c='k', alpha=.3)
 fig.subplots_adjust(left=0.04,right=0.95)
 
