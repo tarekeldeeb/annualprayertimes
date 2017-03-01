@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 # compatible with python 2.x and 3.x
 
-import math
-import re
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
 import datetime as DT
 from datetime import timedelta, date
-from pt import *
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
 from matplotlib.dates import FRIDAY
 from matplotlib.dates import DayLocator, MonthLocator, WeekdayLocator, DateFormatter
+
+from umalqurra.hijri_date import HijriDate
+from pt import *
+
 
 '''
 Plots an Annual Prayer Times Chart for a given city, year and a calculation method.
 
 '''
+
 
 ## Needed Configuration ----------------------
 cnf_year = 2017
@@ -37,6 +39,10 @@ def time2minutes(time):
 def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + timedelta(n)
+
+def HijriFormatter(d,m,y):
+    HD = HijriDate(y,m,d,True)
+    return(int(HD.day),HD.month_name.decode("utf-8"),int(HD.year))
 
 start_date = date(cnf_year, 1, 1)
 end_date = date((cnf_year+1), 1, 1)
@@ -105,3 +111,4 @@ for r in regions:
     ax.add_patch(poly)
 
 plt.show()
+
